@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# Brew - a package manager.
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+brew update
+
+# AG - A faster/better grep.
+brew install the_silver_searcher
+
+# Node.js - because javascript.
+brew install node
