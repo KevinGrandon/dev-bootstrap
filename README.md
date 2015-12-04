@@ -1,5 +1,9 @@
 # Dev Bootstrap
 
-Running:
+A script to setup a new development computer.
 
-sh <(curl -s https://github.com/KevinGrandon/dev-bootstrap/master/mac)
+## Running:
+
+```
+sh <(curl -s https://raw.githubusercontent.com/KevinGrandon/dev-bootstrap/master/mac)
+```
