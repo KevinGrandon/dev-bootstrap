@@ -38,3 +38,7 @@ brew cask install google-drive
 
 # Passwords
 brew cask install 1password
+
+# Chats
+brew cask install slack
+brew cask install adium
