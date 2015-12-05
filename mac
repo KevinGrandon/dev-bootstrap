@@ -1,14 +1,74 @@
 #!/usr/bin/env bash
 
+# Utility brew functions
+brew_install_or_upgrade() {
+  if brew_is_installed "$1"; then
+    if brew_is_upgradable "$1"; then
+      echo "Upgrading %s ..." "$1"
+      brew upgrade "$@"
+    else
+      echo "Already using the latest version of %s. Skipping ..." "$1"
+    fi
+  else
+    echo "Installing %s ..." "$1"
+    brew install "$@"
+  fi
+}
+
+brew_is_installed() {
+  brew list -1 | grep -Fqx "$1"
+}
+
+brew_is_upgradable() {
+  ! brew outdated --quiet "$1" >/dev/null
+}
+
+brew_tap_is_installed() {
+  brew tap | grep -Fqx "$1"
+}
+
+brew_tap() {
+  if ! brew_tap_is_installed "$1"; then
+    echo "Brew: Tapping $1..."
+    brew tap "$1" 2> /dev/null
+  fi
+}
+
+brew_cask_expand_alias() {
+  brew cask info "$1" 2>/dev/null | head -1 | awk '{gsub(/:/, ""); print $1}'
+}
+
+brew_cask_is_installed() {
+  local NAME
+  NAME=$(brew_cask_expand_alias "$1")
+  brew cask list -1 | grep -Fqx "$NAME"
+}
+
+app_is_installed() {
+  local app_name
+  app_name=$(echo "$1" | cut -d'-' -f1)
+  find /Applications -iname "$app_name*" -maxdepth 1 | egrep '.*' > /dev/null
+}
+
+brew_cask_install() {
+  if app_is_installed "$1" || brew_cask_is_installed "$1"; then
+    echo "$1 is already installed. Skipping..."
+  else
+    echo "Installing $1..."
+    brew cask install "$@"
+  fi
+}
+
 # Make a `~/workspace` dir if it doesn't exist.
 mkdir -p ~/workspace
 
 # Brew - a package manager.
 ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+echo "Updating brew formulas"
 brew update
 
 # Install git
-brew install git
+brew_install_or_upgrade 'git'
 
 # Clone awesome dotfiles and alises
 if [ ! -d "~/workspace/dotfiles" ]; then
@@ -20,28 +80,28 @@ else
 fi
 
 # AG - A faster/better grep.
-brew install the_silver_searcher
+brew_install_or_upgrade 'the_silver_searcher'
 
 # Node.js - because javascript.
-brew install node
+brew_install_or_upgrade 'node'
 
 # Caskroom.io - an easy CLI app installer.
-brew install caskroom/cask/brew-cask
-brew tap caskroom/versions
+brew_install_or_upgrade 'caskroom/cask/brew-cask'
+brew_tap 'caskroom/versions'
 
 # IDE
-brew cask install sublime-text3
+brew_cask_install 'sublime-text3'
 
 # Browsers
-brew cask install firefox
-brew cask install google-chrome
+brew_cask_install 'firefox'
+brew_cask_install 'google-chrome'
 
 # Storage, woohoo.
-brew cask install google-drive
+brew_cask_install 'google-drive'
 
 # Passwords
-brew cask install 1password
+brew_cask_install '1password'
 
 # Chats
-brew cask install slack
-brew cask install adium
+brew_cask_install 'slack'
+brew_cask_install 'adium'
