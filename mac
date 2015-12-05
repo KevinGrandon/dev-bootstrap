@@ -1,5 +1,17 @@
 #!/usr/bin/env bash
 
+# Make a `~/workspace` dir if it doens't exist.
+mkdir -p ~/workspace
+
+# Clone awesome dot files and alises
+if [ ! -d "~/workspace/dotfiles" ]; then
+  echo "cloning dotfiles."
+  cd ~/workspace && git clone git@github.com:KevinGrandon/dotfiles.git
+  printf "\n. ~/workspace/dotfiles/index\n" >> ~/.bash_profile
+else
+  echo "dotfiles already exist."
+fi
+
 # Brew - a package manager.
 ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 brew update
