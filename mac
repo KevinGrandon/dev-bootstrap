@@ -3,6 +3,13 @@
 # Make a `~/workspace` dir if it doesn't exist.
 mkdir -p ~/workspace
 
+# Brew - a package manager.
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+brew update
+
+# Install git
+brew install git
+
 # Clone awesome dotfiles and alises
 if [ ! -d "~/workspace/dotfiles" ]; then
   echo "cloning dotfiles."
@@ -11,10 +18,6 @@ if [ ! -d "~/workspace/dotfiles" ]; then
 else
   echo "dotfiles already exist."
 fi
-
-# Brew - a package manager.
-ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-brew update
 
 # AG - A faster/better grep.
 brew install the_silver_searcher
