@@ -105,3 +105,9 @@ brew_cask_install '1password'
 # Chats
 brew_cask_install 'slack'
 brew_cask_install 'adium'
+
+# Sublime Plugin - Attempt to install package control over the command line
+cd ~/Library/Application\ Support/Sublime\ Text\ 3/Packages/
+git clone git://github.com/wbond/sublime_package_control.git Package\ Control
+cd Package\ Control
+git checkout python3
